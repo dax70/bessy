@@ -1,4 +1,4 @@
-import Large3dLayout from './Large3dLayout';
+import Layout3d from './Layout3d';
 import Legend from './Legend';
 import Seat from './Seat';
 import TiltControl from './TiltControl';
@@ -8,7 +8,7 @@ import MiniPlan from './MiniPlan';
 import Room from './Room';
 
 export {
-  Large3dLayout,
+  Layout3d,
   Legend,
   Seat,
   TiltControl,

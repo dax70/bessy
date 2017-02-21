@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Large3dLayout from './Large3dLayout';
+import Layout3d from './Layout3d';
 import TiltControl from './TiltControl';
 import SeatMap from './SeatMap';
 import MiniPlan from './MiniPlan';
@@ -8,7 +8,6 @@ export default class Room extends Component {
   constructor(props){
       super(props);
       this.onTiltClicked = this.onTiltClicked.bind(this);
-      this.updateSeatMap = this.updateSeatMap.bind(this);
       this.state = { enableTilt: false };
   }
 
@@ -19,17 +18,12 @@ export default class Room extends Component {
     }))
   }
 
-  updateSeatMap(seat) {
-    console.log(seat);
-
-  }
-
   render() {
     return(
       <div>
-        <Large3dLayout tilt={this.state.enableTilt}>
+        <Layout3d tilt={this.state.enableTilt}>
           <SeatMap className="rows rows--large" {...this.props} />
-        </Large3dLayout>
+        </Layout3d>
         <MiniPlan>
           <SeatMap className="rows rows--mini" {...this.props} />
         </MiniPlan>
