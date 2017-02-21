@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Seat from './Seat';
 
 function generateRow(row, handler) {
@@ -10,6 +10,7 @@ function generateRow(row, handler) {
 }
 
 export default class SeatMap extends Component {
+
   static propTypes = {
     seatData: React.PropTypes.array.isRequired
   }
@@ -18,7 +19,7 @@ export default class SeatMap extends Component {
     const seats = this.props.seatData.map((row, i) => {
       return (
         <div key={i} className="row">
-          { generateRow(row, this.props.onClick) }
+          { generateRow(row, this.props.selectSeat) }
         </div>
       )
     });

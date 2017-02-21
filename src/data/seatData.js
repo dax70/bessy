@@ -15,7 +15,7 @@ function getSeatData() {
       const id = key + col;
       const reserved = reservedSeats.find((item) => id === item)? true: false;
 
-      return { id: id, row: key, col: col, reserved: reserved };
+      return { id: id, row: key, col: col, reserved };
     });
   })
 

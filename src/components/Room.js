@@ -34,10 +34,10 @@ export default class Room extends Component {
     return(
       <div>
         <Large3dLayout tilt={this.state.enableTilt}>
-          <SeatMap seatData={seatData} className="rows rows--large" onClick={this.updateSeatMap}/>
+          <SeatMap seatData={seatData} className="rows rows--large" {...this.props} />
         </Large3dLayout>
         <MiniPlan>
-          <SeatMap seatData={seatData} className="rows rows--mini" onClick={this.updateSeatMap}/>
+          <SeatMap seatData={seatData} className="rows rows--mini" {...this.props} />
         </MiniPlan>
         <TiltControl
             enableTilt={ this.state.enableTilt}
