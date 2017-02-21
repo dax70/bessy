@@ -9,9 +9,7 @@ export default class Room extends Component {
       super(props);
       this.onTiltClicked = this.onTiltClicked.bind(this);
       this.updateSeatMap = this.updateSeatMap.bind(this);
-      this.state = {
-        enableTilt: false
-      }
+      this.state = { enableTilt: false };
   }
 
   onTiltClicked() {
@@ -27,9 +25,6 @@ export default class Room extends Component {
   }
 
   render() {
-    const seatData = this.state.seatMapData;
-    console.log(this.props);
-
     return(
       <div>
         <Large3dLayout tilt={this.state.enableTilt}>

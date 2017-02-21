@@ -2,6 +2,7 @@
 function getMousePos(e) {
   var posx = 0;
   var posy = 0;
+  // eslint-disable-next-line no-redeclare
   if (!e) var e = window.event;
   if (e.pageX || e.pageY) 	{
     posx = e.pageX;

@@ -1,15 +1,15 @@
 
-
+// Seat
 function selectSeat(state, action) {
   switch (action.type) {
     case 'SELECT_SEAT':
-      if (state.id !== action.id) {
+      if (state.id !== action.seat.id) {
         return state
       }
 
       return {
         ...state,
-        selected: !state.selected
+        selected: state.selected? !state.selected: true
       }
     case 'DESELECT_SEAT':
       break;
@@ -18,13 +18,14 @@ function selectSeat(state, action) {
   }
 }
 
+// Row [18]
 function selectRow(state, action) {
   switch (action.type) {
     case 'SELECT_SEAT':
       // @cleanup - null/undefine check
       const firstItem = state[0];
 
-      if (firstItem.row !== action.row) {
+      if (firstItem.row !== action.seat.row) {
         return state
       }
 
@@ -38,6 +39,7 @@ function selectRow(state, action) {
   }
 }
 
+// Matric [18,18]
 function seats(state = [], action) {
   switch (action.type) {
     case 'SELECT_SEAT':

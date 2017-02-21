@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-const playerState = {
-  stop: 'stop',
-  start: 'start',
-  pause: 'pause'
-};
+// const playerState = {
+//   stop: 'stop',
+//   start: 'start',
+//   pause: 'pause'
+// };
 
 export default class VideoPlayer extends Component {
 
@@ -14,7 +14,7 @@ export default class VideoPlayer extends Component {
   }
 
   onClick() {
-
+    // @TODO: fix video player
   }
 
   render() {

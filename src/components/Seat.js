@@ -25,8 +25,8 @@ export default class Seat extends Component {
 
   render() {
     const seatStyles = classNames(
-      "row__seat tooltip",{
-      "row__seat--selected": this.state.selected,
+      "row__seat tooltip", {
+      "row__seat--selected": this.props.seat.selected,
       "row__seat--reserved": this.props.seat.reserved
     });
 

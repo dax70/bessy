@@ -7,7 +7,7 @@ import { Room } from './components';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { selectSeat } from './actions';
+import * as actionCreators from './actions';
 
 function mapStateToProps(state) {
   return {
@@ -16,7 +16,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(selectSeat, dispatch)
+  return bindActionCreators(actionCreators, dispatch)
 }
 
 class App extends Component {
