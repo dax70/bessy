@@ -3,7 +3,7 @@
 function selectSeat(state, action) {
   switch (action.type) {
     case 'SELECT_SEAT':
-      if (state.id !== action.seat.id) {
+      if (state.reserved || state.id !== action.seat.id) {
         return state
       }
 

@@ -16,6 +16,7 @@ export default class SeatMap extends Component {
   }
 
   render() {
+    console.log(this.props.seatMapData);
     const seats = this.props.seatMapData.map((row, i) => {
       return (
         <div key={i} className="row">
