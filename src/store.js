@@ -1,4 +1,4 @@
-import { createStore, compose } from 'redux';
+import { createStore } from 'redux';
 import rootReducer from './reducers';
 import getSeatData from './data/seatData';
 

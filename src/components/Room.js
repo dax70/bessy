@@ -10,8 +10,7 @@ export default class Room extends Component {
       this.onTiltClicked = this.onTiltClicked.bind(this);
       this.updateSeatMap = this.updateSeatMap.bind(this);
       this.state = {
-        enableTilt: false,
-        seatMapData: props.seatMapData
+        enableTilt: false
       }
   }
 
@@ -28,16 +27,16 @@ export default class Room extends Component {
   }
 
   render() {
-
     const seatData = this.state.seatMapData;
+    console.log(this.props);
 
     return(
       <div>
         <Large3dLayout tilt={this.state.enableTilt}>
-          <SeatMap seatData={seatData} className="rows rows--large" {...this.props} />
+          <SeatMap className="rows rows--large" {...this.props} />
         </Large3dLayout>
         <MiniPlan>
-          <SeatMap seatData={seatData} className="rows rows--mini" {...this.props} />
+          <SeatMap className="rows rows--mini" {...this.props} />
         </MiniPlan>
         <TiltControl
             enableTilt={ this.state.enableTilt}

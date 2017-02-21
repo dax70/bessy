@@ -12,11 +12,11 @@ function generateRow(row, handler) {
 export default class SeatMap extends Component {
 
   static propTypes = {
-    seatData: React.PropTypes.array.isRequired
+    seatMapData: React.PropTypes.array.isRequired
   }
 
   render() {
-    const seats = this.props.seatData.map((row, i) => {
+    const seats = this.props.seatMapData.map((row, i) => {
       return (
         <div key={i} className="row">
           { generateRow(row, this.props.selectSeat) }

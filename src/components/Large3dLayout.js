@@ -98,10 +98,18 @@ export default class Large3dLayout extends Component {
       z : 3000 // SCSS $cube_z
     }
 
+    const roomTransform = {
+          translateX : 0,
+          translateY : roomsize.y/3.5, // view from top..
+          translateZ : 0,
+          rotateX : -15, // ..looking down
+          rotateY : 0
+    }
+
     this.setState(prevState =>({
       ...prevState,
-      roomsize: roomsize,
-      roomTransform: roomTransform
+      roomsize,
+      roomTransform
     }))
 
     this.updateDimensions();
@@ -111,14 +119,6 @@ export default class Large3dLayout extends Component {
 			scaleRoom(this.state.winsize, this.state.roomsize);
 		}, 10);
 
-    const roomTransform = {
-          translateX : 0,
-          translateY : roomsize.y/3.5, // view from top..
-          translateZ : 0,
-          rotateX : -15, // ..looking down
-          rotateY : 0
-    }
-  
     // window resize: update window size
     document.addEventListener('mousemove', this.onMouseMove);
 		window.addEventListener('resize', throttleFunc);
