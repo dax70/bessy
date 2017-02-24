@@ -4,7 +4,10 @@ import Screen from './Screen';
 import throttle from '../lib/Throttle';
 import getMousePos from '../lib/MousePos';
 
-import { scaleRoom, applyRoomTransform, applyRoomTransition, rotateX, rotateY } from '../lib/3dHelpers';
+import {
+  scaleRoom,
+  applyRoomTransform, applyRoomTransition, rotateX, rotateY, lineEq }
+from '../lib/3dHelpers';
 
 const cubeStyle = {
   transform: `translate3d(0px, 0px, 2000px)
@@ -16,7 +19,11 @@ const cubeStyle = {
 
 const perspective = 2000;
 
-const row_gap_amount = 2
+const row_gap_amount = 2;
+
+const row_front_gap = 800;
+
+const row_back = 100;
 
 const tiltRotation = {
         rotateX : 25, // a relative rotation of -25deg to 25deg on the x-axis
@@ -93,12 +100,14 @@ export default class Layout3d extends Component {
         'rotateY' : rotY
       }
 
+      this.transform = transform;
+
       const room = this.refs.room;
       room.style.WebkitTransform = room.style.transform = applyRoomTransform(transform, roomTransform, perspective);
     });
   }
 
-  previewSeat = (seat)=> {
+  previewSeat = (seat) => {
     applyRoomTransition(null, this.refs.room);
 
     // getComputedStyle: https://css-tricks.com/get-value-of-css-rotation-through-javascript/
@@ -112,40 +121,71 @@ export default class Layout3d extends Component {
 
     if( tr === 'none' ) return;
 
-    var values = tr.split('(')[1],
-     values = values.split(')')[0],
-     values = values.split(','),
+    var values = tr.split('(')[1];
+    values = values.split(')')[0];
+    values = values.split(',');
 
      // translateY value of this seat´s row
-     y = values[13],
+    const  y = values[13];
      // translateZ value of this seat´s row
-     z = values[14];
+    const z = values[14];
 
-    //  // seat´s center point (x-axis)
-    //  seatCenterX = seat.offsetLeft + side_margin/2 + seat.offsetWidth/2,
-     //
-    //  // translateX, translateY and translateZ values
-    //  tx = seatCenterX < roomsize.x/2 ? initTransform.translateX + (roomsize.x/2 - seatCenterX) : initTransform.translateX - (seatCenterX - roomsize.x/2),
-    //  ty = roomsize.y/2 - (roomsize.y - Math.abs(y)) + seat.offsetHeight + 10, // add a small extra
-    //  tz = Math.abs(z)+10, // add a small extra
-     //
-    //  // calculate how much to rotate in the x-axis (the more close to the screen the more we need to rotate)
-    //  firstRowZ = roomsize.z - row_front_gap,
-    //  lastRowZ = firstRowZ - (totalRows - 1 + row_gap_amount) * row_back,
-     //
-    //  // calculate how much to rotate in the y-axis (the more close to the screen the more we need to rotate.
-    //  // Also the same applies when the distance from the center of the room to both sides increases.
-    //  // for the last row:
-    //  minRotY_1 = 0, maxRotY_1 = 20, // min and max values for y rotation
-    //  initialTranslationX = 0, finalTranslationX = roomsize.x/2,
-    //  rotY_1 = lineEq(minRotY_1, maxRotY_1, initialTranslationX, finalTranslationX, tx),
-    //  // for the first row:
-    //  minRotY_2 = 0, maxRotY_2 = 50, // min and max values for y rotation
-    //  rotY_2 = lineEq(minRotY_2, maxRotY_2, initialTranslationX, finalTranslationX, tx),
-    //  // final:
-    //  rotY = lineEq(rotY_1, rotY_2, lastRowZ, firstRowZ, Math.abs(z));
+    // seat´s center point (x-axis)
+    const seatCenterX = seat.offsetLeft + this.side_margin/2 + seat.offsetWidth/2;
 
+    const initTransform = this.roomTransform;
+
+    const roomsize = this.roomsize;
+
+     // translateX, translateY and translateZ values
+     const tx = seatCenterX < roomsize.x/2 ?
+                initTransform.translateX + (roomsize.x/2 - seatCenterX) :
+                initTransform.translateX - (seatCenterX - roomsize.x/2);
+     const ty = roomsize.y/2 - (roomsize.y - Math.abs(y)) + seat.offsetHeight + 10; // add a small extra
+     const tz = Math.abs(z)+10; // add a small extra
+
+     const totalRows = 18;
+     // calculate how much to rotate in the x-axis (the more close to the screen the more we need to rotate)
+     const firstRowZ = roomsize.z - row_front_gap;
+     const lastRowZ = firstRowZ - (totalRows - 1 + row_gap_amount) * row_back;
+
+     // calculate how much to rotate in the y-axis (the more close to the screen the more we need to rotate.
+     // Also the same applies when the distance from the center of the room to both sides increases.
+     // for the last row:
+     const minRotY_1 = 0, maxRotY_1 = 20; // min and max values for y rotation
+     const initialTranslationX = 0, finalTranslationX = roomsize.x/2;
+     const rotY_1 = lineEq(minRotY_1, maxRotY_1, initialTranslationX, finalTranslationX, tx);
+     // for the first row:
+     const minRotY_2 = 0, maxRotY_2 = 50; // min and max values for y rotation
+     const rotY_2 = lineEq(minRotY_2, maxRotY_2, initialTranslationX, finalTranslationX, tx);
+     // final:
+     const rotY = lineEq(rotY_1, rotY_2, lastRowZ, firstRowZ, Math.abs(z));
+
+     // room transforms
+		const roomTransform = {
+			translateX : tx,
+			translateY : ty,
+			translateZ : tz,
+			rotateX : 0,//rotX,
+			rotateY : rotY
+		};
+
+    const transform = this.transform;
+    
+    // apply transform
+    room.style.WebkitTransform = room.style.transform
+                    = applyRoomTransform(transform, roomTransform, perspective);
+
+    const room = this.refs.room
+
+    this.onEndTransition(room, () => {
+      this.removeRoomTransition(room);
+    });
   };
+
+  side_margin = 0;
+  roomsize = {};
+  roomTransform = {};
 
   componentDidMount() {
     const seat_width = 80; //seats[0].offsetWidth
@@ -165,6 +205,10 @@ export default class Layout3d extends Component {
           rotateX : -15, // ..looking down
           rotateY : 0
     }
+
+    this.side_margin = side_margin;
+    this.roomsize = roomsize;
+    this.roomTransform = roomTransform;
 
     this.setState(prevState =>({
       ...prevState,

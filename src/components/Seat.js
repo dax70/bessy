@@ -14,13 +14,13 @@ export default class Seat extends Component {
       onClick(this.props.seat);
     }
 
-    const isReserved = this.props.seat.reserved;
-    if (isReserved) {
-      return;
-    }
-
-    let selected = this.state.selected;
-    this.setState({selected:!selected})
+    // const isReserved = this.props.seat.reserved;
+    // if (isReserved) {
+    //   return;
+    // }
+    //
+    // let selected = this.state.selected;
+    // this.setState({selected:!selected})
   }
 
   render() {
