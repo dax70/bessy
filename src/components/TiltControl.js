@@ -19,7 +19,7 @@ export default class TiltControl extends Component {
   render() {
     const currentStyle = classNames(
       "action action--lookaround action--shown", {
-      "action--disabled": !this.props.enableTilt
+      "action--disabled": !this.props.tiltEnabled
     });
 
     return (

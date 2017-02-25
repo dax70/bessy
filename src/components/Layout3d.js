@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Screen from './Screen';
 
 import throttle from '../lib/Throttle';
@@ -32,10 +32,21 @@ const tiltRotation = {
 
 // @TODO look into whether Modernizr is needed.
 const support = {} //{transitions : Modernizr.csstransitions};
-const transEndEventNames = {'WebkitTransition': 'webkitTransitionEnd', 'MozTransition': 'transitionend', 'OTransition': 'oTransitionEnd', 'msTransition': 'MSTransitionEnd', 'transition': 'transitionend'};
+const transEndEventNames = {
+  'WebkitTransition': 'webkitTransitionEnd',
+  'MozTransition': 'transitionend',
+  'OTransition': 'oTransitionEnd',
+  'msTransition': 'MSTransitionEnd',
+  'transition': 'transitionend'
+};
+
 const transEndEventName = {} //transEndEventNames[Modernizr.prefixed('transition')];
 
 export default class Layout3d extends Component {
+
+  static propTypes = {
+    tiltEnabled: PropTypes.bool.isRequired
+  }
 
   constructor(props) {
     super(props);
@@ -78,12 +89,12 @@ export default class Layout3d extends Component {
   onMouseMove(ev) {
     const winsize = this.state.winsize;
 
-    const tilt = this.props.tilt;
+    const tiltEnabled = this.props.tiltEnabled;
 
     const roomTransform = this.state.roomTransform;
 
     requestAnimationFrame(() => {
-      if( !tilt ) return false;
+      if( !tiltEnabled ) return false;
 
       const mousepos = getMousePos(ev);
         // transform values
@@ -171,7 +182,7 @@ export default class Layout3d extends Component {
 		};
 
     const transform = this.transform;
-    
+
     // apply transform
     room.style.WebkitTransform = room.style.transform
                     = applyRoomTransform(transform, roomTransform, perspective);
@@ -224,7 +235,9 @@ export default class Layout3d extends Component {
 		}, 10);
 
     // register events
-    document.addEventListener('mousemove', this.onMouseMove);
+    if(this.props.tiltEnabled) {
+      document.addEventListener('mousemove', this.onMouseMove);
+    }
 		window.addEventListener('resize', throttleFunc);
   }
 
@@ -234,8 +247,17 @@ export default class Layout3d extends Component {
     window.removeEventListener("resize", this.updateDimensions);
   }
 
-  render() {
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.tiltEnabled) {
+      document.addEventListener('mousemove', this.onMouseMove);
+      return;
+    }
 
+    document.removeEventListener('mousemove', this.onMouseMove);
+  }
+
+  render() {
+    const tiltEnabled = this.props.tiltEnabled;
     return (
       <div ref="container" className="container" style={{transform: "scale3d(0.699479, 0.699479, 1)"}}>
         <div ref="room" className="cube" style={ cubeStyle }>

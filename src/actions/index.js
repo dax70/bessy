@@ -5,3 +5,9 @@ export function selectSeat(seat) {
     seat
   }
 }
+
+export function toggleTilt() {
+  return {
+    type: 'TOGGLE_TILT'
+  }
+}
