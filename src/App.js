@@ -11,6 +11,7 @@ import * as actionCreators from './actions';
 
 function mapStateToProps(state) {
   return {
+    previewSeat: state.previewSeat,
     tiltEnabled: state.tiltEnabled,
     seatMapData: state.seats
   }

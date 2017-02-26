@@ -11,6 +11,4 @@ const defaultState = {
 
 const store = createStore(rootReducer, defaultState);
 
-console.log(store.getState());
-
 export default store;

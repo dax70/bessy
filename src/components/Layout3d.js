@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Screen from './Screen';
 
 import throttle from '../lib/Throttle';
-import getMousePos from '../lib/MousePos';
+import {getMousePosition, getElementPosition} from '../lib/position';
 
 import {
   scaleRoom,
@@ -72,7 +72,7 @@ export default class Layout3d extends Component {
   onEndTransition = (el, callback)=> {
 			var onEndCallbackFn = function( ev ) {
 				if( support.transitions ) {
-					if( ev.target != this ) return;
+					if( ev.target !== this ) return;
 					this.removeEventListener( transEndEventName, onEndCallbackFn );
 				}
 				if( callback && typeof callback === 'function' ) { callback.call(this); }
@@ -96,7 +96,7 @@ export default class Layout3d extends Component {
     requestAnimationFrame(() => {
       if( !tiltEnabled ) return false;
 
-      const mousepos = getMousePos(ev);
+      const mousepos = getMousePosition(ev);
         // transform values
 
       const rotX = rotateX(tiltRotation.rotateX, roomTransform.rotateX, winsize.height, mousepos.y);
@@ -121,25 +121,7 @@ export default class Layout3d extends Component {
   previewSeat = (seat) => {
     applyRoomTransition(null, this.refs.room);
 
-    // getComputedStyle: https://css-tricks.com/get-value-of-css-rotation-through-javascript/
-		const st = window.getComputedStyle(seat.parentNode, null);
-		const	tr = st.getPropertyValue('-webkit-transform') ||
-				        st.getPropertyValue('-moz-transform') ||
-				        st.getPropertyValue('-ms-transform') ||
-				        st.getPropertyValue('-o-transform') ||
-				        st.getPropertyValue('transform') ||
-				        'Either no transform set, or browser doesn´t do getComputedStyle';
-
-    if( tr === 'none' ) return;
-
-    var values = tr.split('(')[1];
-    values = values.split(')')[0];
-    values = values.split(',');
-
-     // translateY value of this seat´s row
-    const  y = values[13];
-     // translateZ value of this seat´s row
-    const z = values[14];
+    const {y,z} = getElementPosition(seat.parentNode);
 
     // seat´s center point (x-axis)
     const seatCenterX = seat.offsetLeft + this.side_margin/2 + seat.offsetWidth/2;
@@ -183,11 +165,11 @@ export default class Layout3d extends Component {
 
     const transform = this.transform;
 
+    const room = this.refs.room;
+
     // apply transform
     room.style.WebkitTransform = room.style.transform
                     = applyRoomTransform(transform, roomTransform, perspective);
-
-    const room = this.refs.room
 
     this.onEndTransition(room, () => {
       this.removeRoomTransition(room);
@@ -236,6 +218,7 @@ export default class Layout3d extends Component {
 
     // register events
     if(this.props.tiltEnabled) {
+      document.removeEventListener('mousemove', this.onMouseMove);
       document.addEventListener('mousemove', this.onMouseMove);
     }
 		window.addEventListener('resize', throttleFunc);
@@ -248,16 +231,17 @@ export default class Layout3d extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    document.removeEventListener('mousemove', this.onMouseMove);
     if(nextProps.tiltEnabled) {
       document.addEventListener('mousemove', this.onMouseMove);
-      return;
     }
 
-    document.removeEventListener('mousemove', this.onMouseMove);
+    if(nextProps.previewSeat.element) {
+      this.previewSeat(nextProps.previewSeat.element);
+    }
   }
 
   render() {
-    const tiltEnabled = this.props.tiltEnabled;
     return (
       <div ref="container" className="container" style={{transform: "scale3d(0.699479, 0.699479, 1)"}}>
         <div ref="room" className="cube" style={ cubeStyle }>

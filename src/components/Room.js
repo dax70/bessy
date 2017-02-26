@@ -7,10 +7,15 @@ import MiniPlan from './MiniPlan';
 export default class Room extends Component {
 
   render() {
+    const props = this.props;
+    const compSelectSeat = (selection)=> {
+      props.selectSeat(selection);
+      props.onPreviewSeat(selection);
+    }
     return(
       <div>
         <Layout3d {...this.props}>
-          <SeatMap className="rows rows--large" {...this.props} />
+          <SeatMap className="rows rows--large" {...this.props} selectSeat={compSelectSeat} />
         </Layout3d>
         <MiniPlan>
           <SeatMap className="rows rows--mini" {...this.props} />

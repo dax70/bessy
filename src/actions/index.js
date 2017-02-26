@@ -11,3 +11,10 @@ export function toggleTilt() {
     type: 'TOGGLE_TILT'
   }
 }
+
+export function onPreviewSeat(selection) {
+  return {
+    type: 'SEAT_PREVIEW',
+    selection
+  }
+}

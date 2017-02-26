@@ -6,7 +6,7 @@ function selectSeat(state, action) {
       if (state.reserved || state.id !== action.seat.id) {
         return state
       }
-
+      
       return {
         ...state,
         selected: state.selected? !state.selected: true
@@ -46,8 +46,6 @@ function seats(state = [], action) {
       return state.map(row =>
         selectRow(row, action)
       )
-    case 'DESELECT_SEAT':
-      break;
     default:
       return state;
   }

@@ -11,7 +11,11 @@ export default class Seat extends Component {
   handleClick() {
     const onClick = this.props.onClick;
     if(onClick) {
-      onClick(this.props.seat);
+      const seat = this.props.seat;
+      onClick({
+        ...seat,
+        element: this.refs.seat
+      });
     }
   }
 
@@ -23,7 +27,7 @@ export default class Seat extends Component {
     });
 
     return (
-      <div data-tooltip={this.props.seat.id}
+      <div ref="seat" data-tooltip={this.props.seat.id}
             className={seatStyles}
             onClick={this.handleClick}>
       </div>
