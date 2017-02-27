@@ -31,7 +31,7 @@ const tiltRotation = {
 }
 
 // @TODO look into whether Modernizr is needed.
-const support = {} //{transitions : Modernizr.csstransitions};
+const support = { transitions : true };
 const transEndEventNames = {
   'WebkitTransition': 'webkitTransitionEnd',
   'MozTransition': 'transitionend',
@@ -40,7 +40,7 @@ const transEndEventNames = {
   'transition': 'transitionend'
 };
 
-const transEndEventName = {} //transEndEventNames[Modernizr.prefixed('transition')];
+const transEndEventName = 'transition';
 
 export default class Layout3d extends Component {
 
@@ -236,12 +236,13 @@ export default class Layout3d extends Component {
       document.addEventListener('mousemove', this.onMouseMove);
     }
 
-    if(nextProps.previewSeat.element) {
-      this.previewSeat(nextProps.previewSeat.element);
-    }
   }
 
   render() {
+    if(this.props.previewSeat.element) {
+      this.previewSeat(this.props.previewSeat.element);
+    }
+
     return (
       <div ref="container" className="container" style={{transform: "scale3d(0.699479, 0.699479, 1)"}}>
         <div ref="room" className="cube" style={ cubeStyle }>
